@@ -1,8 +1,8 @@
-# 🎬 LTX-Video Text-to-Video Generator
+# 🎬 Text-to-Video Generator
 
-Generate amazing videos from text descriptions using LTX-Video (LTX 2.3) model!
+Generate amazing videos from text descriptions using AI!
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Vikram-Bosak/ltx-video-generator/blob/main/LTX_Video_Generator.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Vikram-Bosak/ltx-video-generator/blob/main/Text_to_Video_Generator.ipynb)
 
 ## ✨ Features
 
@@ -46,7 +46,7 @@ cd ltx-video-generator
 pip install -r requirements.txt
 
 # Run the notebook
-jupyter notebook LTX_Video_Generator.ipynb
+jupyter notebook Text_to_Video_Generator.ipynb
 ```
 
 ## ⚙️ Requirements
@@ -72,11 +72,11 @@ xformers>=0.0.20
 
 1. **Enter your prompt**: Describe the video you want to create
 2. **Adjust settings** (optional):
-   - Number of frames (9-121)
+   - Number of frames (8-32)
    - Inference steps (10-50)
-   - Guidance scale (1.0-10.0)
+   - Guidance scale (1.0-15.0)
    - Seed for reproducibility
-   - FPS (8-60)
+   - FPS (4-16)
 3. **Click "Generate Video"**
 4. **Download your video**!
 
@@ -91,18 +91,18 @@ xformers>=0.0.20
 ## 🎨 Advanced Settings
 
 ### Number of Frames
-- **Range**: 9-121 frames
-- **Default**: 49 frames
+- **Range**: 8-32 frames
+- **Default**: 16 frames
 - **More frames** = Longer video but slower generation
 
 ### Inference Steps
 - **Range**: 10-50 steps
-- **Default**: 20 steps
+- **Default**: 25 steps
 - **More steps** = Better quality but slower generation
 
 ### Guidance Scale
-- **Range**: 1.0-10.0
-- **Default**: 2.5
+- **Range**: 1.0-15.0
+- **Default**: 7.5
 - **Higher** = More faithful to prompt
 - **Lower** = More creative/abstract
 
@@ -111,17 +111,17 @@ xformers>=0.0.20
 - **Set a number** for reproducible results
 
 ### FPS
-- **Range**: 8-60
-- **Default**: 24
+- **Range**: 4-16
+- **Default**: 8
 - **Higher** = Smoother video but larger file
 
 ## 📊 Performance
 
-| GPU | VRAM | Generation Time (49 frames) |
+| GPU | VRAM | Generation Time (16 frames) |
 |-----|------|----------------------------|
-| T4  | 16GB | ~2-3 minutes |
-| V100 | 32GB | ~1-2 minutes |
-| A100 | 40GB | ~30-60 seconds |
+| T4  | 16GB | ~3-5 minutes |
+| V100 | 32GB | ~2-3 minutes |
+| A100 | 40GB | ~1-2 minutes |
 
 ## 🐛 Troubleshooting
 
@@ -142,10 +142,10 @@ xformers>=0.0.20
 
 ## 📝 Model Information
 
-**Model**: LTX-Video (LTX 2.3)
-**Developer**: Lightricks
+**Model**: ModelScope Text-to-Video MS 1.7B
+**Developer**: Alibaba DAMO Academy
 **License**: Apache 2.0
-**Paper**: [LTX-Video: Efficient Video Generation with Latent Diffusion](https://arxiv.org/abs/2409.06571)
+**Framework**: Diffusers
 
 ## 🤝 Contributing
 
@@ -157,7 +157,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🙏 Acknowledgments
 
-- [Lightricks](https://github.com/Lightricks) for the LTX-Video model
+- [Alibaba DAMO Academy](https://modelscope.cn/) for the text-to-video model
 - [Hugging Face](https://huggingface.co/) for the Diffusers library
 - [Gradio](https://gradio.app/) for the UI framework
 
@@ -169,4 +169,4 @@ For questions or support, please open an issue on GitHub.
 
 **Made with ❤️ by Vikram Bosak**
 
-**Note**: This tool uses the LTX-Video model from Lightricks. Please respect the model's license and terms of use.
+**Note**: This tool uses the ModelScope text-to-video model. Please respect the model's license and terms of use.
