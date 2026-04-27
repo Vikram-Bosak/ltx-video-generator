@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-LTX-Video Text-to-Video Generator
+Text-to-Video Generator
 Simple script to generate videos from text prompts
 """
 
 import torch
-from diffusers import LTXVideoPipeline
+from diffusers import DiffusionPipeline, DPMSolverMultistepScheduler
 from diffusers.utils import export_to_video
 import gradio as gr
 import numpy as np
@@ -20,14 +20,17 @@ if device == "cuda":
     print(f"💾 VRAM: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.1f} GB")
 
 # Load model
-print("📥 Loading LTX-Video model...")
+print("📥 Loading text-to-video model...")
 print("⏳ This may take 2-3 minutes on first run...")
 
-pipe = LTXVideoPipeline.from_pretrained(
-    "Lightricks/LTX-Video",
+pipe = DiffusionPipeline.from_pretrained(
+    "damo-vilab/text-to-video-ms-1.7b",
     torch_dtype=torch.float16,
     variant="fp16"
 ).to(device)
+
+# Use DPM++ scheduler for faster generation
+pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
 
 # Enable memory optimizations
 pipe.enable_model_cpu_offload()
@@ -38,14 +41,14 @@ print("✅ Model loaded successfully!")
 def generate_video(
     prompt,
     negative_prompt="",
-    num_frames=49,
-    num_inference_steps=20,
-    guidance_scale=2.5,
+    num_frames=16,
+    num_inference_steps=25,
+    guidance_scale=7.5,
     seed=-1,
-    fps=24
+    fps=8
 ):
     """
-    Generate video from text prompt using LTX-Video
+    Generate video from text prompt
     """
     print(f"🎬 Generating video for: {prompt}")
     print(f"⚙️ Settings: {num_frames} frames, {num_inference_steps} steps, guidance={guidance_scale}")
@@ -60,7 +63,6 @@ def generate_video(
         video = pipe(
             prompt=prompt,
             negative_prompt=negative_prompt,
-            num_frames=num_frames,
             num_inference_steps=num_inference_steps,
             guidance_scale=guidance_scale,
             generator=torch.Generator(device).manual_seed(seed) if seed != -1 else None
@@ -68,7 +70,7 @@ def generate_video(
 
     # Save video
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_path = f"ltx_video_{timestamp}.mp4"
+    output_path = f"video_{timestamp}.mp4"
 
     export_to_video(video, output_path, fps=fps)
 
@@ -78,11 +80,11 @@ def generate_video(
     return output_path
 
 # Create Gradio interface
-with gr.Blocks(title="LTX-Video Generator", theme=gr.themes.Soft()) as demo:
+with gr.Blocks(title="Text-to-Video Generator", theme=gr.themes.Soft()) as demo:
     gr.Markdown("""
-    # 🎬 LTX-Video Text-to-Video Generator
+    # 🎬 Text-to-Video Generator
     
-    Generate amazing videos from text descriptions using LTX-Video (LTX 2.3) model!
+    Generate amazing videos from text descriptions using AI!
     
     ---
     """)
@@ -94,7 +96,7 @@ with gr.Blocks(title="LTX-Video Generator", theme=gr.themes.Soft()) as demo:
                 label="✍️ Your Prompt",
                 placeholder="Describe the video you want to create...",
                 lines=3,
-                value="A cinematic shot of a futuristic city at sunset, with flying cars and neon lights reflecting on glass buildings"
+                value="A beautiful sunset over the ocean, with waves gently rolling onto a sandy beach"
             )
 
             # Negative prompt
@@ -102,32 +104,32 @@ with gr.Blocks(title="LTX-Video Generator", theme=gr.themes.Soft()) as demo:
                 label="🚫 Negative Prompt (optional)",
                 placeholder="Things to avoid in the video...",
                 lines=2,
-                value="blurry, low quality, distorted, ugly, bad anatomy"
+                value="blurry, low quality, distorted, ugly, bad animation"
             )
 
             # Advanced settings (collapsed)
             with gr.Accordion("⚙️ Advanced Settings", open=False):
                 num_frames = gr.Slider(
-                    minimum=9,
-                    maximum=121,
-                    value=49,
-                    step=2,
+                    minimum=8,
+                    maximum=32,
+                    value=16,
+                    step=1,
                     label="🎞️ Number of Frames"
                 )
 
                 num_steps = gr.Slider(
                     minimum=10,
                     maximum=50,
-                    value=20,
+                    value=25,
                     step=1,
                     label="🔄 Inference Steps"
                 )
 
                 guidance_scale = gr.Slider(
                     minimum=1.0,
-                    maximum=10.0,
-                    value=2.5,
-                    step=0.1,
+                    maximum=15.0,
+                    value=7.5,
+                    step=0.5,
                     label="🎯 Guidance Scale"
                 )
 
@@ -137,9 +139,9 @@ with gr.Blocks(title="LTX-Video Generator", theme=gr.themes.Soft()) as demo:
                 )
 
                 fps = gr.Slider(
-                    minimum=8,
-                    maximum=60,
-                    value=24,
+                    minimum=4,
+                    maximum=16,
+                    value=8,
                     step=1,
                     label="📹 FPS"
                 )
@@ -171,7 +173,7 @@ with gr.Blocks(title="LTX-Video Generator", theme=gr.themes.Soft()) as demo:
         examples=[
             ["A serene Japanese garden with cherry blossoms falling gently, koi fish swimming in a crystal clear pond", "blurry, low quality"],
             ["An astronaut floating in space with Earth in the background, cinematic lighting", "distorted, ugly"],
-            ["A magical forest with glowing mushrooms and fireflies at night, fantasy style", "bad anatomy"],
+            ["A magical forest with glowing mushrooms and fireflies at night, fantasy style", "bad animation"],
             ["Ocean waves crashing on a rocky beach during golden hour, slow motion", "blurry"],
             ["A cute robot exploring a colorful alien planet, animated style", "low quality"]
         ],
@@ -209,7 +211,7 @@ with gr.Blocks(title="LTX-Video Generator", theme=gr.themes.Soft()) as demo:
     )
 
 print("✅ UI created successfully!")
-print("🚀 Launching LTX-Video Generator...")
+print("🚀 Launching Text-to-Video Generator...")
 print("📱 Click the link below to open the interface!")
 
 demo.launch(
