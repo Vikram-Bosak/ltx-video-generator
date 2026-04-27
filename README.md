@@ -2,6 +2,8 @@
 
 Generate amazing videos from text descriptions using LTX-Video (LTX 2.3) model!
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Vikram-Bosak/ltx-video-generator/blob/main/LTX_Video_Generator.ipynb)
+
 ## ✨ Features
 
 - 🎥 **Text-to-Video Generation**: Create videos from simple text prompts
@@ -12,16 +14,14 @@ Generate amazing videos from text descriptions using LTX-Video (LTX 2.3) model!
 
 ## 🚀 Quick Start
 
-### Option 1: Google Colab (Recommended)
+### Option 1: Google Colab (Recommended) ⭐
 
-1. Open the notebook in Google Colab
+1. **Click the "Open In Colab" button above**
 2. Change runtime to GPU (Runtime → Change runtime type → GPU)
 3. Run all cells
 4. Use the UI to generate videos
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Vikram-Bosak/ltx-video-generator/blob/main/LTX_Video_Generator.ipynb)
-
-### Option 2: Local Setup
+### Option 2: Run Locally
 
 ```bash
 # Clone the repository
@@ -29,8 +29,21 @@ git clone https://github.com/Vikram-Bosak/ltx-video-generator.git
 cd ltx-video-generator
 
 # Install dependencies
-pip install torch torchvision torchaudio
-pip install transformers diffusers accelerate gradio xformers
+pip install -r requirements.txt
+
+# Run the app
+python app.py
+```
+
+### Option 3: Jupyter Notebook
+
+```bash
+# Clone the repository
+git clone https://github.com/Vikram-Bosak/ltx-video-generator.git
+cd ltx-video-generator
+
+# Install dependencies
+pip install -r requirements.txt
 
 # Run the notebook
 jupyter notebook LTX_Video_Generator.ipynb
